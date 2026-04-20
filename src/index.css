@@ -1,0 +1,112 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-dark: #000000;
+  --container-bg: #141414;
+  --text-white: #ffffff;
+  --btn-blue: #2563eb; 
+  --btn-hover: #1d4ed8;
+  --input-bg: #ffffff;
+  --input-text: #000000;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-container {
+  background-color: var(--container-bg);
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 0 4px 30px rgba(255, 255, 255, 0.03);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.input-field:focus {
+  outline: 2px solid var(--btn-blue);
+  outline-offset: 2px;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--btn-blue);
+  color: var(--text-white);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: var(--btn-hover);
+}
+
+.action-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.output-area {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #e5e5e5;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--text-white);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
