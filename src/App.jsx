@@ -1,9 +1,15 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { isValidTopic, sanitizeInput } from './utils/security'
+import { logger } from './utils/logger'
 
 function App() {
   const [topic, setTopic] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState(null)
+  
+  // Rate limiting / Abuse Protection
+  const lastRequestRef = useRef(0)
+  const RATE_LIMIT_MS = 4000;
 
   const performResearch = async (searchTopic) => {
     try {
@@ -59,17 +65,36 @@ function App() {
         fact: fact
       }
     } catch (e) {
+      logger.logApiError('wikipedia/search', e.message)
       return `Error conducting research: ${e.message}`
     }
   }
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (e) => {
+    if (e) e.preventDefault() // For form submissions
+
     if (!topic.trim()) return
+
+    const now = Date.now();
+    if (now - lastRequestRef.current < RATE_LIMIT_MS) {
+      const waitTime = Math.ceil((RATE_LIMIT_MS - (now - lastRequestRef.current)) / 1000);
+      logger.logSuspiciousActivity('UI rate limit triggered - fast clicking detected', { topic });
+      setResult(`Security Timeout - Potential spam detected. Please wait ${waitTime} seconds before querying Wikipedia again.`);
+      return;
+    }
+
+    if (!isValidTopic(topic)) {
+      setResult("Security Alert - Invalid input. Topics must be 2-100 characters and contain only letters, numbers, spaces, and basic punctuation (- _ ' .).")
+      return;
+    }
+
+    lastRequestRef.current = Date.now();
 
     setIsLoading(true)
     setResult(null)
 
-    const researchData = await performResearch(topic)
+    const cleanTopic = sanitizeInput(topic)
+    const researchData = await performResearch(cleanTopic)
     
     setIsLoading(false)
     setResult(researchData)
@@ -79,22 +104,23 @@ function App() {
     <div className="dialog-container">
       <h1 className="title">EDITH</h1>
 
-      <input 
-        type="text" 
-        className="input-field" 
-        placeholder="Enter your topic..." 
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-      />
+      <form onSubmit={handleGenerate} style={{ display: 'contents' }}>
+        <input 
+          type="text" 
+          className="input-field" 
+          placeholder="Enter your topic..." 
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+        />
 
-      <button 
-        className="action-btn" 
-        onClick={handleGenerate}
-        disabled={isLoading || !topic.trim()}
-      >
-        {isLoading ? 'Researching internet...' : 'Generate'}
-      </button>
+        <button 
+          type="submit"
+          className="action-btn" 
+          disabled={isLoading || !topic.trim()}
+        >
+          {isLoading ? 'Researching internet...' : 'Generate'}
+        </button>
+      </form>
 
       {(isLoading || result) && (
         <div className="output-area">
