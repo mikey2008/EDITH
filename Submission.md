@@ -6,7 +6,7 @@
 2. **The prompt you used**
    "Tell me about World War 2"
 
-3. **The AI generated output**
+3. **The AI-generated output**
    World War II was a global conflict that lasted from 1939 to 1945. It involved the vast majority of the world's countries, forming two opposing military alliances: the Allies and the Axis powers. It was the deadliest conflict in human history, resulting in 70 to 85 million fatalities.
 
 4. **One improved prompt you tried**
