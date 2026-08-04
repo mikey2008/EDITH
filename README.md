@@ -58,4 +58,4 @@ Make sure you have Node.js installed on your machine.
 4. **Display**: The UI conditionally renders the formatted data blocks dynamically.
 
 ---
-*Created as part of Class 12 CS Project.*
+*Created as part of practice CS Project.*
